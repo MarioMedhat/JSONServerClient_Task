@@ -1,0 +1,97 @@
+{
+  "authors": [
+    {
+      "id": "1",
+      "name": "Author One",
+      "email": "author1@example.com"
+    },
+    {
+      "id": "2",
+      "name": "Author Two",
+      "email": "author2@example.com"
+    },
+    {
+      "id": "m-k",
+      "name": "a title",
+      "email": "sdsd"
+    }
+  ],
+  "blogs": [
+    {
+      "id": "1",
+      "title": "Blog One",
+      "content": "This is blog one",
+      "authorId": "1"
+    },
+    {
+      "id": "2",
+      "title": "Blog Two",
+      "content": "This is blog two",
+      "authorId": "2"
+    }
+  ],
+  "posts": [
+    {
+      "id": "2",
+      "title": "a title",
+      "views": 15000
+    },
+    {
+      "id": "5",
+      "title": "a kuhuyh titleee",
+      "views": 15000
+    },
+    {
+      "id": "10",
+      "title": "test",
+      "views": 15000
+    },
+    {
+      "title": "a title",
+      "views": 15,
+      "id": "2d"
+    },
+    {
+      "id": "45",
+      "title": "a title",
+      "views": 15
+    },
+    {
+      "title": "aaaaaa title",
+      "views": 15000,
+      "id": "3d"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "text": "a comment about post 1",
+      "postId": null
+    },
+    {
+      "id": "2",
+      "text": "another comment about post 1",
+      "postId": null
+    },
+    {
+      "0": {
+        "id": "5",
+        "text": "a comment about post 1",
+        "postId": "1"
+      },
+      "1": {
+        "id": "2",
+        "text": "another comment about post 1",
+        "postId": "1"
+      },
+      "id": "9ef4"
+    },
+    {
+      "id": "19f2",
+      "query": "\n    query IntrospectionQuery {\n      __schema {\n        \n        queryType { name }\n        mutationType { name }\n        subscriptionType { name }\n        types {\n          ...FullType\n        }\n        directives {\n          name\n          description\n          \n          locations\n          args {\n            ...InputValue\n          }\n        }\n      }\n    }\n\n    fragment FullType on __Type {\n      kind\n      name\n      description\n      \n      fields(includeDeprecated: true) {\n        name\n        description\n        args {\n          ...InputValue\n        }\n        type {\n          ...TypeRef\n        }\n        isDeprecated\n        deprecationReason\n      }\n      inputFields {\n        ...InputValue\n      }\n      interfaces {\n        ...TypeRef\n      }\n      enumValues(includeDeprecated: true) {\n        name\n        description\n        isDeprecated\n        deprecationReason\n      }\n      possibleTypes {\n        ...TypeRef\n      }\n    }\n\n    fragment InputValue on __InputValue {\n      name\n      description\n      type { ...TypeRef }\n      defaultValue\n      \n      \n    }\n\n    fragment TypeRef on __Type {\n      kind\n      name\n      ofType {\n        kind\n        name\n        ofType {\n          kind\n          name\n          ofType {\n            kind\n            name\n            ofType {\n              kind\n              name\n              ofType {\n                kind\n                name\n                ofType {\n                  kind\n                  name\n                  ofType {\n                    kind\n                    name\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  "
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
