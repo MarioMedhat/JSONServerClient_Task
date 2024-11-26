@@ -8,24 +8,18 @@
 #include "AuthorCRUD.hpp"
 #include "BlogCRUD.hpp"
 
-// #include <boost/uuid/uuid.hpp>
-// #include <boost/uuid/uuid_io.hpp>
-// #include <boost/uuid/uuid_generators.hpp> // For boost::uuids::random_generator
-
-// boost::uuids::random_generator generator;
-// boost::uuids::uuid uuid = generator();
-
-// // Convert UUID to string using Boost's to_string()
-// std::string uuid_str = boost::uuids::to_string(uuid);
-// std::cout << "Generated UUID: " << uuid_str << std::endl;
+std::string AuthorCRUD::baseUrl = "http://localhost:3000";
+std::string AuthorCRUD::endpoint = "/authors";
 
 int main() {
-
-    Author author = AuthorCRUD::getAuthorById("1");
-    std::cout << author.getId() << std::endl;
-    std::cout << author.getName() << std::endl;
-    std::cout << author.getEmail() << std::endl;
-
+    
+    std::shared_ptr<Author> author = AuthorCRUD::getAuthorById("k");
+    if (author != nullptr) {
+        std::cout << author->getId() << std::endl;
+        std::cout << author->getName() << std::endl;
+        std::cout << author->getEmail() << std::endl;
+    }
+    
     std::vector<Author> authorsVector = AuthorCRUD::getAllAuthors();
 
     for (const auto& author : authorsVector) {
@@ -34,22 +28,23 @@ int main() {
 
     }
 
-    Author createdAuthor("4d", "Mario", "mario@email.com");
-    AuthorCRUD::createAuthor(createdAuthor);
+    AuthorCRUD::createAuthor("Mario", "mario@email.com");
 
     std::cout << "create author done!" << std::endl;
-    std::cin.get();
 
-    Author updatedAuthor("4d", "Marioooo", "mario@email.com");
+    std::string authorId;
+    std::cout << "write author id to be updated" << std::endl;
+    std::cin >>authorId;
+    Author updatedAuthor(authorId, "Marioooo", "mario@email.com");
     AuthorCRUD::updateAuthor(updatedAuthor);
-
+    
     std::cout << "update author done!" << std::endl;
-    std::cin.get();
 
-    AuthorCRUD::deleteAuthor("4d");
+    std::cout << "write author id to be deleted" << std::endl;
+    std::cin >>authorId;
+    AuthorCRUD::deleteAuthor(authorId);
 
     std::cout << "delete author done!" << std::endl;
-    std::cin.get();
 
     BlogCRUD& blogCRUD = BlogCRUD::getInstance("http://localhost:3000", "/blogs");
 
@@ -68,19 +63,29 @@ int main() {
     }
 
 
-    Blog createdBlog("4k", "test blog", "this is a test blog", "2");
-    blogCRUD.createBlog(createdBlog);
+    blogCRUD.createBlog("test blog", "this is a test blog", "yala negarab");
 
     std::cout << "create blog done!" << std::endl;
-    std::cin.get();
+    std::string blogId;
+    std::cout << "write blog id to be updated" << std::endl;
+    std::cin >>blogId;
 
-    Blog updatedBlog("4k", "test blog", "this is a test bloooooooooooog", "2");
+    blogCRUD.createBlog("test blog", "this is a test blog", "1");
+
+    std::cout << "create blog done!" << std::endl;
+    std::string blogId;
+    std::cout << "write blog id to be updated" << std::endl;
+    std::cin >>blogId;
+
+    Blog updatedBlog(blogId, "test blog", "this is a test bloooooooooooog", "2");
     blogCRUD.updateBlog(updatedBlog);
 
     std::cout << "update blog done!" << std::endl;
-    std::cin.get();
+    
+    std::cout << "write blog id to be deleted" << std::endl;
+    std::cin >>blogId;
 
-    blogCRUD.deleteBlog("4k");
+    blogCRUD.deleteBlog(blogId);
 
     std::cout << "delete blog done!" << std::endl;
 

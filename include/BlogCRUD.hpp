@@ -13,7 +13,7 @@ public:
 
     std::vector<Blog> getAllBlogs();
     Blog getBlogById(std::string id);
-    bool createBlog(const Blog& blog);
+    bool createBlog(const std::string& title, const std::string& content, const std::string& authorId);
     bool updateBlog(const Blog& blog);
     bool deleteBlog(std::string id);
 

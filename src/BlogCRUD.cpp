@@ -1,6 +1,12 @@
 #include "BlogCRUD.hpp"
 #include "JsonServerClient.hpp"
 #include <nlohmann/json.hpp>
+#include <stdexcept>
+#include "Author.hpp"
+#include "AuthorCRUD.hpp"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_generators.hpp> // For boost::uuids::random_generator
 
 // Initialize the static unique_ptr instance to nullptr
 std::unique_ptr<BlogCRUD> BlogCRUD::instance = nullptr;
@@ -51,18 +57,50 @@ Blog BlogCRUD::getBlogById(std::string id) {
 
 }
 
-bool BlogCRUD::createBlog(const Blog& blog) {
+bool BlogCRUD::createBlog(const std::string& title, const std::string& content, const std::string& authorId) {
 
-    JsonServerClient client(baseUrl);
+    bool returnVal = false;
+    try{
 
-    nlohmann::json payload;
-    payload["id"] = blog.getId();
-    payload["name"] = blog.getTitle();
-    payload["email"] = blog.getContent();
-    payload["authorId"] = blog.getAuthorId();
-    client.post(endpoint, payload);
+        std::shared_ptr<Author> authorPtr = AuthorCRUD::getAuthorById(authorId);
+        
+        if (authorPtr != nullptr) {
 
-    return true;
+            JsonServerClient client(baseUrl);
+
+            boost::uuids::random_generator generator;
+            boost::uuids::uuid uuid = generator();
+
+            // Convert UUID to string using Boost's to_string()
+            std::string uuid_str = boost::uuids::to_string(uuid);
+
+            nlohmann::json payload;
+            payload["id"] = uuid_str;
+            payload["name"] = title;
+            payload["content"] = content;
+            payload["authorId"] = authorId;
+            client.post(endpoint, payload);
+
+            returnVal = true;
+
+        }    
+        else {
+
+            std::cout << "New blog not created" << std::endl;
+            returnVal = false;
+        
+        }
+
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "New blog not created" << std::endl;
+        returnVal = false;
+
+    }
+
+    return returnVal;
 
 }
 

@@ -9,8 +9,8 @@ class AuthorCRUD {
 public:
 
     static std::vector<Author> getAllAuthors();
-    static Author getAuthorById(std::string id);
-    static bool createAuthor(const Author& author);
+    static std::shared_ptr<Author> getAuthorById(std::string id);
+    static bool createAuthor(const std::string& name, const std::string& email);
     static bool updateAuthor(const Author& author);
     static bool deleteAuthor(std::string id);
 
