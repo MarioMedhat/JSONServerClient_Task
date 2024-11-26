@@ -36,24 +36,47 @@ BlogCRUD::~BlogCRUD()
 // Method to get all blogs
 std::vector<Blog> BlogCRUD::getAllBlogs()
 {
-    JsonServerClient client(baseUrl);
-    nlohmann::json getData = client.get(endpoint);
-
     std::vector<Blog> blogsVector;
+    try {
 
-    for (const auto& blogData : getData) {
-        Blog blog(blogData["id"], blogData["title"], blogData["content"], blogData["authorId"]);
-        blogsVector.push_back(blog);
+        JsonServerClient client(baseUrl);
+        nlohmann::json getData = client.get(endpoint);
+
+        for (const auto& blogData : getData) {
+            Blog blog(blogData["id"], blogData["title"], blogData["content"], blogData["authorId"]);
+            blogsVector.push_back(blog);
+        }
+
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "Could not fetch all blogs data" << std::endl;
+
     }
 
     return blogsVector;
 }
 
-Blog BlogCRUD::getBlogById(std::string id) {
+std::shared_ptr<Blog> BlogCRUD::getBlogById(std::string id) {
 
-    JsonServerClient client(baseUrl);
-    nlohmann::json getData = client.get(endpoint + (std::string)"/" + id);
-    return(Blog(getData["id"], getData["title"], getData["content"], getData["authorId"]));
+    std::shared_ptr <Blog> blogPtr = nullptr;
+
+    try {
+
+        JsonServerClient client(baseUrl);
+        nlohmann::json getData = client.get(endpoint + (std::string)"/" + id);
+        blogPtr = std::shared_ptr<Blog> (new Blog(getData["id"], getData["title"], getData["content"], getData["authorId"]));
+
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "blog with id = " << id << " is not foud" << std::endl;
+
+    }
+        
+    return(blogPtr);
 
 }
 
@@ -106,23 +129,52 @@ bool BlogCRUD::createBlog(const std::string& title, const std::string& content, 
 
 bool BlogCRUD::updateBlog(const Blog& blog) {
 
-    JsonServerClient client(baseUrl);
+    bool returnVal = false;
+    try {
 
-    nlohmann::json payload;
-    payload["title"] = blog.getTitle();
-    payload["content"] = blog.getContent();
-    payload["authorId"] = blog.getAuthorId();
-    client.put(endpoint + "/" + blog.getId(), payload);
+        JsonServerClient client(baseUrl);
 
-    return true;
+        nlohmann::json payload;
+        payload["title"] = blog.getTitle();
+        payload["content"] = blog.getContent();
+        payload["authorId"] = blog.getAuthorId();
+        client.put(endpoint + "/" + blog.getId(), payload);
+
+        returnVal = true;
+
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "Blog not updated" << std::endl;
+        returnVal = false;
+
+    }
+
+    return returnVal;
 
 }
 bool BlogCRUD::deleteBlog(std::string id) {
 
-    JsonServerClient client(baseUrl);
+    bool returnVal = false;
 
-    client.del(endpoint + "/" + id);
+    try {
 
-    return true;
+        JsonServerClient client(baseUrl);
+
+        client.del(endpoint + "/" + id);
+
+        returnVal = true;
+
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "Blog not updated" << std::endl;
+        returnVal = false;
+
+    }
+
+    return returnVal;
 
 }

@@ -48,11 +48,25 @@ int main() {
 
     BlogCRUD& blogCRUD = BlogCRUD::getInstance("http://localhost:3000", "/blogs");
 
-    Blog blog = blogCRUD.getBlogById("1");
-    std::cout << blog.getId() << std::endl;
-    std::cout << blog.getTitle() << std::endl;
-    std::cout << blog.getContent() << std::endl;
-    std::cout << blog.getAuthorId() << std::endl;
+    std::shared_ptr<Blog> blog = blogCRUD.getBlogById("bengaraaaaaaab");
+    if (blog != nullptr) {
+
+        std::cout << blog->getId() << std::endl;
+        std::cout << blog->getTitle() << std::endl;
+        std::cout << blog->getContent() << std::endl;
+        std::cout << blog->getAuthorId() << std::endl;
+
+    }
+
+    blog = blogCRUD.getBlogById("1");
+    if (blog != nullptr) {
+
+        std::cout << blog->getId() << std::endl;
+        std::cout << blog->getTitle() << std::endl;
+        std::cout << blog->getContent() << std::endl;
+        std::cout << blog->getAuthorId() << std::endl;
+
+    }
 
     std::vector<Blog> blogsVector = blogCRUD.getAllBlogs();
 
@@ -66,10 +80,6 @@ int main() {
     blogCRUD.createBlog("test blog", "this is a test blog", "yala negarab");
 
     std::cout << "create blog done!" << std::endl;
-    std::string blogId;
-    std::cout << "write blog id to be updated" << std::endl;
-    std::cin >>blogId;
-
     blogCRUD.createBlog("test blog", "this is a test blog", "1");
 
     std::cout << "create blog done!" << std::endl;

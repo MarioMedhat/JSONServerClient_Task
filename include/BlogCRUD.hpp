@@ -12,7 +12,7 @@ public:
     static BlogCRUD& getInstance(const std::string& baseUrl, const std::string& endpoint);
 
     std::vector<Blog> getAllBlogs();
-    Blog getBlogById(std::string id);
+    std::shared_ptr<Blog> getBlogById(std::string id);
     bool createBlog(const std::string& title, const std::string& content, const std::string& authorId);
     bool updateBlog(const Blog& blog);
     bool deleteBlog(std::string id);

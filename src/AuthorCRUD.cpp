@@ -11,19 +11,26 @@
 
 std::vector<Author> AuthorCRUD::getAllAuthors() {
 
-    JsonServerClient client(baseUrl);
-
-    nlohmann::json getData = client.get(endpoint);
-
     std::vector<Author> authorsVector;
+    try {
 
-    for (const auto& authorData : getData) {
+        JsonServerClient client(baseUrl);
 
-        Author author(authorData["id"], authorData["name"], authorData["email"]);
-        authorsVector.push_back(author);
+        nlohmann::json getData = client.get(endpoint);
+
+        for (const auto& authorData : getData) {
+
+            Author author(authorData["id"], authorData["name"], authorData["email"]);
+            authorsVector.push_back(author);
+
+        }
 
     }
+    catch (const std::exception& e) {
 
+        std::cout << "Copuld not fetch authors data" << std::endl;
+
+    }
 
     return authorsVector;
 
@@ -55,43 +62,81 @@ std::shared_ptr<Author> AuthorCRUD::getAuthorById(std::string id) {
 
 bool AuthorCRUD::createAuthor(const std::string& name, const std::string& email) {
 
-    JsonServerClient client(baseUrl);
+    bool returnVal = false;
 
-    boost::uuids::random_generator generator;
-    boost::uuids::uuid uuid = generator();
+    try {
 
-    // Convert UUID to string using Boost's to_string()
-    std::string uuid_str = boost::uuids::to_string(uuid);
+        JsonServerClient client(baseUrl);
 
-    nlohmann::json payload;
-    payload["id"] = uuid_str;
-    payload["name"] = name;
-    payload["email"] = email;
-    client.post(endpoint, payload);
+        boost::uuids::random_generator generator;
+        boost::uuids::uuid uuid = generator();
 
-    return true;
+        // Convert UUID to string using Boost's to_string()
+        std::string uuid_str = boost::uuids::to_string(uuid);
+
+        nlohmann::json payload;
+        payload["id"] = uuid_str;
+        payload["name"] = name;
+        payload["email"] = email;
+        client.post(endpoint, payload);
+
+        returnVal = true;
+
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "Author not created" << std::endl;
+
+    }
+
+    return returnVal;
 
 }
 
 bool AuthorCRUD::updateAuthor(const Author& author) {
 
-    JsonServerClient client(baseUrl);
+    bool returnVal = false;
 
-    nlohmann::json payload;
-    payload["name"] = author.getName();
-    payload["email"] = author.getEmail();
-    client.put(endpoint + (std::string)"/" + author.getId(), payload);
+    try {
 
-    return true;
+        JsonServerClient client(baseUrl);
+
+        nlohmann::json payload;
+        payload["name"] = author.getName();
+        payload["email"] = author.getEmail();
+        client.put(endpoint + (std::string)"/" + author.getId(), payload);
+
+        returnVal = true;
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "Author not updated" << std::endl;
+
+    }
+
+    return returnVal;
 
 }
 
 bool AuthorCRUD::deleteAuthor(std::string id) {
 
-    JsonServerClient client(baseUrl);
+    bool returnVal = false;
 
-    client.del(endpoint + "/" + id);
+    try {
 
-    return true;
+        JsonServerClient client(baseUrl);
+        client.del(endpoint + "/" + id);
+        returnVal = true;
+    }
+
+    catch (const std::exception& e) {
+
+        std::cout << "Author not updated" << std::endl;
+
+    }
+
+    return returnVal;
 
 }
